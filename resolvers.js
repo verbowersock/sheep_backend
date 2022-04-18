@@ -26,7 +26,7 @@ const resolvers = {
         ],
       });
     },
-    get_sheep: async (root, { sheep_id }) => {
+    get_sheep_by_id: async (root, { sheep_id }) => {
       const validationErrors = {};
       if (!isInteger(sheep_id)) {
         validationErrors.sheep_id = "This is not a valid id";
@@ -38,6 +38,28 @@ const resolvers = {
         );
       }
       const sheep = await Sheep.findByPk(sheep_id, {
+        include: [
+          {
+            model: Breed,
+          },
+          {
+            model: Sheep,
+            as: "mother",
+            include: [{ model: Breed }],
+          },
+          {
+            model: Sheep,
+            as: "father",
+            include: [{ model: Breed }],
+          },
+        ],
+      });
+      return sheep;
+    },
+    get_sheep_by_tag: async (root, { tag_id }) => {
+      const sheep = await Sheep.findOne({
+        where: { tag_id },
+
         include: [
           {
             model: Breed,

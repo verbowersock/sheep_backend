@@ -28,7 +28,8 @@ const typeDefs = gql`
     purchase_date: String
   }
   type Query {
-    get_sheep(sheep_id: Int): Sheep
+    get_sheep_by_id(sheep_id: Int!): Sheep
+    get_sheep_by_tag(tag_id: String!): Sheep
     get_all_sheep: [Sheep!]!
     get_all_breeds: [Breed!]!
   }
