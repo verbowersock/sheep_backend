@@ -12,6 +12,14 @@ module.exports = (Conn, Sequelize) => {
         allowNull: false,
         unique: true,
       },
+      scrapie_id: {
+        type: Sequelize.STRING,
+        unique: true,
+      },
+      name: {
+        type: Sequelize.STRING,
+        unique: true,
+      },
       dob: {
         type: Sequelize.DATEONLY,
         allowNull: false,
@@ -45,8 +53,20 @@ module.exports = (Conn, Sequelize) => {
           isDate: true,
         },
       },
+      weight_at_birth: {
+        type: Sequelize.INTEGER,
+        validate: {
+          isNumeric: true,
+        },
+      },
+      date_deceased: {
+        type: Sequelize.STRING,
+      },
       breed_id: {
         type: Sequelize.BIGINT,
+      },
+      date_last_bred: {
+        type: Sequelize.STRING,
       },
     },
     { underscored: true }

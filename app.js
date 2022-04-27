@@ -6,7 +6,7 @@ const typeDefs = require("./typeDefs");
 const resolvers = require("./resolvers");
 //config
 
-const APP_PORT = 3000;
+const APP_PORT = 4000;
 async function startServer() {
   const app = express();
   const apolloServer = new ApolloServer({

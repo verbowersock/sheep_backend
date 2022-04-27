@@ -4,12 +4,17 @@ const typeDefs = gql`
   type Sheep {
     sheep_id: Int!
     tag_id: String!
+    scrapie_id: String
+    name: String
+    weight_at_birth: Int
+    date_deceased: String
     dob: String!
     sex: String!
     purchase_date: String
     father: Sheep
     mother: Sheep
     breed: Breed!
+    date_last_bred: String
     created_at: String
     updated_at: String
     dams_children: Sheep
@@ -21,12 +26,7 @@ const typeDefs = gql`
     created_at: String
     updated_at: String
   }
-  input SheepInput {
-    tag_id: String!
-    dob: String!
-    sex: String!
-    purchase_date: String
-  }
+
   type Query {
     get_sheep_by_id(sheep_id: Int!): Sheep
     get_sheep_by_tag(tag_id: String!): Sheep
@@ -42,6 +42,10 @@ const typeDefs = gql`
       breed_id: Int!
       dam: Int
       sire: Int
+      scrapie_id: String
+      name: String
+      weight_at_birth: Int
+      date_deceased: String
     ): String
 
     updateSheep(
@@ -53,6 +57,11 @@ const typeDefs = gql`
       breed_id: Int
       dam: Int
       sire: Int
+      scrapie_id: String
+      name: String
+      weight_at_birth: Int
+      date_deceased: String
+      date_last_bred: String
     ): String
 
     deleteSheep(sheep_id: Int!): String
