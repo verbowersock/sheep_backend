@@ -5,6 +5,8 @@ const validator = require("validator");
 
 const Sheep = db.models.Sheep;
 const Breed = db.models.Breed;
+const Color = db.models.Color;
+const Marking = db.models.Marking;
 const resolvers = {
   Query: {
     get_all_sheep: async () => {
@@ -16,13 +18,15 @@ const resolvers = {
           {
             model: Sheep,
             as: "mother",
-            include: [{ model: Breed }],
+            include: [{ model: Breed }, { model: Color }, { model: Marking }],
           },
           {
             model: Sheep,
             as: "father",
-            include: [{ model: Breed }],
+            include: [{ model: Breed }, { model: Color }, { model: Marking }],
           },
+          { model: Color },
+          { model: Marking },
         ],
       });
     },
@@ -42,15 +46,17 @@ const resolvers = {
           {
             model: Breed,
           },
+          { model: Color },
+          { model: Marking },
           {
             model: Sheep,
             as: "mother",
-            include: [{ model: Breed }],
+            include: [{ model: Breed }, { model: Color }, { model: Marking }],
           },
           {
             model: Sheep,
             as: "father",
-            include: [{ model: Breed }],
+            include: [{ model: Breed }, { model: Color }, { model: Marking }],
           },
         ],
       });
@@ -64,15 +70,17 @@ const resolvers = {
           {
             model: Breed,
           },
+          { model: Color },
+          { model: Marking },
           {
             model: Sheep,
             as: "mother",
-            include: [{ model: Breed }],
+            include: [{ model: Breed }, { model: Color }, { model: Marking }],
           },
           {
             model: Sheep,
             as: "father",
-            include: [{ model: Breed }],
+            include: [{ model: Breed }, { model: Color }, { model: Marking }],
           },
         ],
       });
@@ -85,71 +93,40 @@ const resolvers = {
   Mutation: {
     createSheep: async (
       _,
-      { tag_id, dob, sex, purchase_date, breed_id, sire, dam }
-    ) => {
-      const validationErrors = {};
-
-      if (!validator.isISO8601(dob)) {
-        console.log(dob);
-        validationErrors.dob = "This is not a valid date";
-      }
-      if (!validator.isIn(sex, ["f", "m"])) {
-        validationErrors.sex = "This is not a valid sex";
-      }
-      if (purchase_date && !validator.isISO8601(purchase_date)) {
-        validationErrors.purchase_date = "This is not a valid purchase date";
-      }
-      if (!isInteger(breed_id)) {
-        validationErrors.sex = "This is not a valid breed";
-      }
-      if (sire && !isInteger(sire)) {
-        validationErrors.sire = "This is not a valid sire";
-      }
-      if (dam && !isInteger(dam)) {
-        validationErrors.dam = "This is not a valid dam";
-      }
-      if (Object.keys(validationErrors).length > 0) {
-        throw new UserInputError(
-          "Failed to get events due to validation errors",
-          { validationErrors }
-        );
-      }
-
-      const sheep = await Sheep.create({
+      {
         tag_id,
         dob,
         sex,
         purchase_date,
         breed_id,
-        sire,
-        dam,
-      });
-      return `sheep ${tag_id} created`;
-    },
-    updateSheep: async (
-      _,
-      { sheep_id, tag_id, dob, sex, purchase_date, breed_id, sire, dam }
+        mother,
+        father,
+        color,
+        marking,
+        scrapie_id,
+        name,
+        weight_at_birth,
+        date_deceased,
+        date_last_bred,
+      }
     ) => {
       const validationErrors = {};
 
-      if (!validator.isISO8601(dob)) {
+      if (dob && !validator.isISO8601(dob)) {
         console.log(dob);
         validationErrors.dob = "This is not a valid date";
-      }
-      if (!validator.isIn(sex, ["f", "m"])) {
-        validationErrors.sex = "This is not a valid sex";
       }
       if (purchase_date && !validator.isISO8601(purchase_date)) {
         validationErrors.purchase_date = "This is not a valid purchase date";
       }
-      if (!isInteger(breed_id)) {
-        validationErrors.sex = "This is not a valid breed";
+      //if (breed && !isInteger(breed)) {
+      //  validationErrors.sex = "This is not a valid breed";
+      // }
+      if (father && !isInteger(father)) {
+        validationErrors.father = "This is not a valid sire";
       }
-      if (sire && !isInteger(sire)) {
-        validationErrors.sire = "This is not a valid sire";
-      }
-      if (dam && !isInteger(dam)) {
-        validationErrors.dam = "This is not a valid dam";
+      if (mother && !isInteger(mother)) {
+        validationErrors.mother = "This is not a valid dam";
       }
       if (Object.keys(validationErrors).length > 0) {
         throw new UserInputError(
@@ -157,19 +134,89 @@ const resolvers = {
           { validationErrors }
         );
       }
-      await Sheep.update(
+
+      return Sheep.create({
+        tag_id,
+        dob,
+        sex,
+        purchase_date,
+        breed_id,
+        mother,
+        father,
+        color,
+        marking,
+        scrapie_id,
+        name,
+        weight_at_birth,
+        date_deceased,
+        date_last_bred,
+      });
+    },
+    updateSheep: async (
+      _,
+      {
+        sheep_id,
+        tag_id,
+        dob,
+        sex,
+        purchase_date,
+        breed_id,
+        mother,
+        father,
+        color,
+        marking,
+        scrapie_id,
+        name,
+        weight_at_birth,
+        date_deceased,
+        date_last_bred,
+      }
+    ) => {
+      const validationErrors = {};
+
+      if (dob && !validator.isISO8601(dob)) {
+        console.log(dob);
+        validationErrors.dob = "This is not a valid date";
+      }
+
+      if (purchase_date && !validator.isISO8601(purchase_date)) {
+        validationErrors.purchase_date = "This is not a valid purchase date";
+      }
+      if (breed_id && !isInteger(breed_id)) {
+        validationErrors.sex = "This is not a valid breed";
+      }
+      if (father && !isInteger(father)) {
+        validationErrors.father = "This is not a valid sire";
+      }
+      if (mother && !isInteger(mother)) {
+        validationErrors.mother = "This is not a valid dam";
+      }
+      if (Object.keys(validationErrors).length > 0) {
+        throw new UserInputError(
+          "Failed to get events due to validation errors",
+          { validationErrors }
+        );
+      }
+      return Sheep.update(
         {
           tag_id,
           dob,
           sex,
           purchase_date,
           breed_id,
-          sire,
-          dam,
+          mother,
+          father,
+          color,
+          marking,
+          scrapie_id,
+          name,
+          weight_at_birth,
+          date_deceased,
+          date_last_bred,
         },
         { where: { sheep_id: sheep_id } }
       );
-      return `sheep ${tag_id} updated`;
+      //  return `sheep ${breed} updated`;
     },
     deleteSheep: async (root, { sheep_id }) => {
       const sheep = await Sheep.findOne({ where: { sheep_id } });

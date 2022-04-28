@@ -5,7 +5,7 @@ const typeDefs = gql`
     sheep_id: Int!
     tag_id: String!
     scrapie_id: String
-    name: String
+    name: String!
     weight_at_birth: Int
     date_deceased: String
     dob: String!
@@ -13,7 +13,9 @@ const typeDefs = gql`
     purchase_date: String
     father: Sheep
     mother: Sheep
-    breed: Breed!
+    breed_id: Breed!
+    color: Color!
+    marking: Marking!
     date_last_bred: String
     created_at: String
     updated_at: String
@@ -22,9 +24,15 @@ const typeDefs = gql`
   }
   type Breed {
     id: Int!
-    breed_name: String
-    created_at: String
-    updated_at: String
+    breed_name: String!
+  }
+  type Color {
+    id: Int!
+    color_name: String!
+  }
+  type Marking {
+    id: Int!
+    marking_name: String!
   }
 
   type Query {
@@ -39,14 +47,16 @@ const typeDefs = gql`
       dob: String!
       sex: String!
       purchase_date: String
-      breed_id: Int!
-      dam: Int
-      sire: Int
+      breed_id: Int
+      mother: Int
+      father: Int
+      color: Int
+      marking: Int
       scrapie_id: String
-      name: String
+      name: String!
       weight_at_birth: Int
       date_deceased: String
-    ): String
+    ): Sheep!
 
     updateSheep(
       sheep_id: Int!
@@ -55,14 +65,16 @@ const typeDefs = gql`
       sex: String
       purchase_date: String
       breed_id: Int
-      dam: Int
-      sire: Int
+      mother: Int
+      father: Int
+      color: Int
+      marking: Int
       scrapie_id: String
       name: String
       weight_at_birth: Int
       date_deceased: String
       date_last_bred: String
-    ): String
+    ): Sheep!
 
     deleteSheep(sheep_id: Int!): String
 
@@ -71,6 +83,18 @@ const typeDefs = gql`
     updateBreed(id: Int!, breed_name: String!): String
 
     deleteBreed(id: Int!): String
+
+    createColor(color_name: String!): String
+
+    updateColor(id: Int!, color_name: String!): String
+
+    deleteColor(id: Int!): String
+
+    createMarking(marking_name: String!): String
+
+    updateMarking(id: Int!, marking_name: String!): String
+
+    deleteMarking(id: Int!): String
   }
 `;
 

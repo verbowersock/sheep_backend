@@ -1,18 +1,18 @@
 module.exports = (Conn, Sequelize) => {
-  const Breed = Conn.define(
-    "breeds",
+  const Color = Conn.define(
+    "colors",
     {
       id: {
         type: Sequelize.BIGINT,
         primaryKey: true,
         autoIncrement: true,
       },
-      breed_name: {
+      color_name: {
         type: Sequelize.STRING,
         allowNull: false,
       },
     },
     { underscored: true, timestamps: false }
   );
-  return Breed;
+  return Color;
 };

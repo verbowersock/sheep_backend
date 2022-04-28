@@ -10,6 +10,8 @@ module.exports = [
     name: "Betsy",
     weight_at_birth: 4,
     date_last_bred: "2022-02-10",
+    color_id: 1,
+    marking_id: 1,
   },
   {
     sheep_id: 3,
@@ -22,6 +24,8 @@ module.exports = [
     scrapie_id: "564224",
     name: "Hugo",
     weight_at_birth: 5,
+    color_id: 2,
+    marking_id: 11,
   },
   {
     sheep_id: 6,
@@ -34,6 +38,8 @@ module.exports = [
     scrapie_id: "346537623",
     name: "Mary",
     weight_at_birth: 5.5,
+    color_id: 4,
+    marking_id: 5,
   },
   {
     sheep_id: 5,
@@ -46,6 +52,8 @@ module.exports = [
     scrapie_id: "23526",
     name: "Bree",
     weight_at_birth: 5,
+    color_id: 3,
+    marking_id: 7,
   },
   {
     sheep_id: 27,
@@ -58,8 +66,9 @@ module.exports = [
     scrapie_id: "3569742",
     name: "Black",
     weight_at_birth: 4,
-
+    color_id: 5,
     date_deceased: "2022-02-10",
+    marking_id: 10,
   },
   {
     sheep_id: 29,
@@ -72,7 +81,8 @@ module.exports = [
     scrapie_id: "5642124",
     name: "White",
     weight_at_birth: 5,
-
+    color_id: 6,
     date_deceased: "2022-01-10",
+    marking_id: 9,
   },
 ];

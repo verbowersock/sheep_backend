@@ -1,18 +1,18 @@
 module.exports = (Conn, Sequelize) => {
-  const Breed = Conn.define(
-    "breeds",
+  const Marking = Conn.define(
+    "markings",
     {
       id: {
         type: Sequelize.BIGINT,
         primaryKey: true,
         autoIncrement: true,
       },
-      breed_name: {
+      marking_name: {
         type: Sequelize.STRING,
         allowNull: false,
       },
     },
     { underscored: true, timestamps: false }
   );
-  return Breed;
+  return Marking;
 };

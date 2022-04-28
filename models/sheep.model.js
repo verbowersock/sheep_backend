@@ -31,7 +31,7 @@ module.exports = (Conn, Sequelize) => {
         type: Sequelize.STRING,
         allowNull: false,
         validate: {
-          isIn: [["f", "m"]],
+          isIn: [["f", "m", "w"]],
           notEmpty: false,
         },
       },
@@ -63,6 +63,12 @@ module.exports = (Conn, Sequelize) => {
         type: Sequelize.STRING,
       },
       breed_id: {
+        type: Sequelize.BIGINT,
+      },
+      color_id: {
+        type: Sequelize.BIGINT,
+      },
+      marking_id: {
         type: Sequelize.BIGINT,
       },
       date_last_bred: {
