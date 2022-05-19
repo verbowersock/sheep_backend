@@ -14,14 +14,42 @@ const Color = require("./color.model")(Conn, Sequelize);
 const Marking = require("./marking.model")(Conn, Sequelize);
 db.models = { Sheep, Breed, Color, Marking };
 
-Breed.hasMany(Sheep), { foreignKey: "breed_id" };
-Sheep.belongsTo(Breed);
-Color.hasMany(Sheep), { foreignKey: "color_id" };
-Sheep.belongsTo(Color);
-Marking.hasMany(Sheep), { foreignKey: "marking_id" };
-Sheep.belongsTo(Marking);
-//Sheep.hasMany(Sheep, { foreignKey: "dam", as: "dams_children" });
-//Sheep.hasMany(Sheep, { foreignKey: "sire", as: "sires_children" });
-Sheep.belongsTo(Sheep, { foreignKey: "dam", as: "mother" });
-Sheep.belongsTo(Sheep, { foreignKey: "sire", as: "father" });
+Breed.hasMany(Sheep, {
+  foreignKey: "breed_id",
+  onDelete: "RESTRICT",
+});
+Sheep.belongsTo(Breed, {
+  foreignKey: "breed_id",
+  onDelete: "RESTRICT",
+}),
+  Color.hasMany(Sheep, {
+    foreignKey: "color_id",
+    onDelete: "RESTRICT",
+  });
+Sheep.belongsTo(Color, {
+  foreignKey: "color_id",
+  onDelete: "RESTRICT",
+});
+Marking.hasMany(Sheep, { foreignKey: "marking_id", onDelete: "RESTRICT" });
+Sheep.belongsTo(Marking, { foreignKey: "marking_id", onDelete: "RESTRICT" });
+Sheep.hasMany(Sheep, {
+  foreignKey: "dam",
+  as: "dam_lambs",
+  onDelete: "RESTRICT",
+});
+Sheep.hasMany(Sheep, {
+  foreignKey: "sire",
+  as: "sire_lambs",
+  onDelete: "RESTRICT",
+});
+Sheep.belongsTo(Sheep, {
+  foreignKey: "dam",
+  as: "mother",
+  onDelete: "RESTRICT",
+});
+Sheep.belongsTo(Sheep, {
+  foreignKey: "sire",
+  as: "father",
+  onDelete: "RESTRICT",
+});
 module.exports = db;

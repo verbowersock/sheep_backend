@@ -7,6 +7,9 @@ module.exports = (Conn, Sequelize) => {
         primaryKey: true,
         autoIncrement: true,
       },
+      picture: {
+        type: Sequelize.STRING.BINARY,
+      },
       tag_id: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -64,6 +67,7 @@ module.exports = (Conn, Sequelize) => {
       },
       breed_id: {
         type: Sequelize.BIGINT,
+        allowNull: false,
       },
       color_id: {
         type: Sequelize.BIGINT,

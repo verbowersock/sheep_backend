@@ -10,6 +10,7 @@ module.exports = (Conn, Sequelize) => {
       breed_name: {
         type: Sequelize.STRING,
         allowNull: false,
+        unique: true,
       },
     },
     { underscored: true, timestamps: false }

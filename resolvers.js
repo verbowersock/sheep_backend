@@ -1,4 +1,3 @@
-const { isInteger, isDate } = require("lodash");
 const db = require("./models/index");
 const { UserInputError } = require("apollo-server");
 const validator = require("validator");
@@ -14,27 +13,33 @@ const resolvers = {
         include: [
           {
             model: Breed,
+            as: "breed",
           },
           {
             model: Sheep,
             as: "mother",
-            include: [{ model: Breed }, { model: Color }, { model: Marking }],
+            include: [
+              { model: Breed, as: "breed" },
+              { model: Color, as: "color" },
+              { model: Marking, as: "marking" },
+            ],
           },
           {
             model: Sheep,
             as: "father",
-            include: [{ model: Breed }, { model: Color }, { model: Marking }],
+            include: [
+              { model: Breed, as: "breed" },
+              { model: Color, as: "color" },
+              { model: Marking, as: "marking" },
+            ],
           },
-          { model: Color },
-          { model: Marking },
+          { model: Color, as: "color" },
+          { model: Marking, as: "marking" },
         ],
       });
     },
     get_sheep_by_id: async (root, { sheep_id }) => {
       const validationErrors = {};
-      if (!isInteger(sheep_id)) {
-        validationErrors.sheep_id = "This is not a valid id";
-      }
       if (Object.keys(validationErrors).length > 0) {
         throw new UserInputError(
           "Failed to get events due to validation errors",
@@ -43,20 +48,34 @@ const resolvers = {
       }
       const sheep = await Sheep.findByPk(sheep_id, {
         include: [
+          "dam_lambs",
+          "sire_lambs",
           {
             model: Breed,
+            as: "breed",
           },
-          { model: Color },
-          { model: Marking },
+          { model: Color, as: "color" },
+          { model: Marking, as: "marking" },
           {
             model: Sheep,
             as: "mother",
-            include: [{ model: Breed }, { model: Color }, { model: Marking }],
+            include: [
+              {
+                model: Breed,
+                as: "breed",
+              },
+              { model: Color, as: "color" },
+              { model: Marking, as: "marking" },
+            ],
           },
           {
             model: Sheep,
             as: "father",
-            include: [{ model: Breed }, { model: Color }, { model: Marking }],
+            include: [
+              { model: Breed, as: "breed" },
+              { model: Color, as: "color" },
+              { model: Marking, as: "marking" },
+            ],
           },
         ],
       });
@@ -69,25 +88,53 @@ const resolvers = {
         include: [
           {
             model: Breed,
+            as: "breed",
           },
-          { model: Color },
-          { model: Marking },
+          { model: Color, as: "color" },
+          { model: Marking, as: "marking" },
           {
             model: Sheep,
             as: "mother",
-            include: [{ model: Breed }, { model: Color }, { model: Marking }],
+            include: [
+              {
+                model: Breed,
+                as: "breed",
+              },
+              { model: Color, as: "color" },
+              { model: Marking, as: "marking" },
+            ],
           },
           {
             model: Sheep,
             as: "father",
-            include: [{ model: Breed }, { model: Color }, { model: Marking }],
+            include: [
+              { model: Breed, as: "breed" },
+              { model: Color, as: "color" },
+              { model: Marking, as: "marking" },
+            ],
           },
         ],
       });
       return sheep;
     },
+    get_all_females: async (_, { sex }) => {
+      return await Sheep.findAll({
+        where: { sex: "f" },
+      });
+    },
+    get_all_males: async (_, { sex }) => {
+      return await Sheep.findAll({
+        where: { sex: "m" },
+      });
+    },
     get_all_breeds: async () => {
       return await Breed.findAll();
+    },
+    get_all_colors: async () => {
+      return await Color.findAll();
+    },
+    get_all_markings: async () => {
+      return await Marking.findAll();
     },
   },
   Mutation: {
@@ -99,10 +146,10 @@ const resolvers = {
         sex,
         purchase_date,
         breed_id,
-        mother,
-        father,
-        color,
-        marking,
+        dam,
+        sire,
+        color_id,
+        marking_id,
         scrapie_id,
         name,
         weight_at_birth,
@@ -119,37 +166,61 @@ const resolvers = {
       if (purchase_date && !validator.isISO8601(purchase_date)) {
         validationErrors.purchase_date = "This is not a valid purchase date";
       }
-      //if (breed && !isInteger(breed)) {
-      //  validationErrors.sex = "This is not a valid breed";
-      // }
-      if (father && !isInteger(father)) {
-        validationErrors.father = "This is not a valid sire";
-      }
-      if (mother && !isInteger(mother)) {
-        validationErrors.mother = "This is not a valid dam";
-      }
+
       if (Object.keys(validationErrors).length > 0) {
         throw new UserInputError(
           "Failed to get events due to validation errors",
           { validationErrors }
         );
       }
-
-      return Sheep.create({
+      await Sheep.create({
         tag_id,
         dob,
         sex,
         purchase_date,
         breed_id,
-        mother,
-        father,
-        color,
-        marking,
+        dam,
+        sire,
+        color_id,
+        marking_id,
         scrapie_id,
         name,
         weight_at_birth,
         date_deceased,
         date_last_bred,
+      });
+      return await Sheep.findOne({
+        where: { tag_id },
+
+        include: [
+          {
+            model: Breed,
+            as: "breed",
+          },
+          { model: Color, as: "color" },
+          { model: Marking, as: "marking" },
+          {
+            model: Sheep,
+            as: "mother",
+            include: [
+              {
+                model: Breed,
+                as: "breed",
+              },
+              { model: Color, as: "color" },
+              { model: Marking, as: "marking" },
+            ],
+          },
+          {
+            model: Sheep,
+            as: "father",
+            include: [
+              { model: Breed, as: "breed" },
+              { model: Color, as: "color" },
+              { model: Marking, as: "marking" },
+            ],
+          },
+        ],
       });
     },
     updateSheep: async (
@@ -160,7 +231,7 @@ const resolvers = {
         dob,
         sex,
         purchase_date,
-        breed_id,
+        breed,
         mother,
         father,
         color,
@@ -182,28 +253,20 @@ const resolvers = {
       if (purchase_date && !validator.isISO8601(purchase_date)) {
         validationErrors.purchase_date = "This is not a valid purchase date";
       }
-      if (breed_id && !isInteger(breed_id)) {
-        validationErrors.sex = "This is not a valid breed";
-      }
-      if (father && !isInteger(father)) {
-        validationErrors.father = "This is not a valid sire";
-      }
-      if (mother && !isInteger(mother)) {
-        validationErrors.mother = "This is not a valid dam";
-      }
+
       if (Object.keys(validationErrors).length > 0) {
         throw new UserInputError(
           "Failed to get events due to validation errors",
           { validationErrors }
         );
       }
-      return Sheep.update(
+      await Sheep.update(
         {
           tag_id,
           dob,
           sex,
           purchase_date,
-          breed_id,
+          breed,
           mother,
           father,
           color,
@@ -216,7 +279,39 @@ const resolvers = {
         },
         { where: { sheep_id: sheep_id } }
       );
-      //  return `sheep ${breed} updated`;
+      return await Sheep.findOne({
+        where: { sheep_id },
+
+        include: [
+          {
+            model: Breed,
+            as: "breed",
+          },
+          { model: Color, as: "color" },
+          { model: Marking, as: "marking" },
+          {
+            model: Sheep,
+            as: "mother",
+            include: [
+              {
+                model: Breed,
+                as: "breed",
+              },
+              { model: Color, as: "color" },
+              { model: Marking, as: "marking" },
+            ],
+          },
+          {
+            model: Sheep,
+            as: "father",
+            include: [
+              { model: Breed, as: "breed" },
+              { model: Color, as: "color" },
+              { model: Marking, as: "marking" },
+            ],
+          },
+        ],
+      });
     },
     deleteSheep: async (root, { sheep_id }) => {
       const sheep = await Sheep.findOne({ where: { sheep_id } });
@@ -231,10 +326,9 @@ const resolvers = {
       return true;
     },
     createBreed: async (_, { breed_name }) => {
-      await Breed.create({
+      return await Breed.create({
         breed_name,
       });
-      return `breed ${breed_name} created`;
     },
     updateBreed: async (_, { id, breed_name }) => {
       await Breed.update(
@@ -258,7 +352,43 @@ const resolvers = {
       });
       return true;
     },
+
+    createColor: async (_, { color_name }) => {
+      return await Color.create({
+        color_name,
+      });
+    },
+    deleteColor: async (root, { id }) => {
+      const color = await Color.findOne({ where: { id } });
+      if (!color) {
+        throw new Error("Color not found!");
+      }
+      await Color.destroy({
+        where: {
+          id: id,
+        },
+      });
+      return true;
+    },
+    createMarking: async (_, { marking_name }) => {
+      return await Marking.create({
+        marking_name,
+      });
+    },
+    deleteMarking: async (root, { id }) => {
+      const marking = await Marking.findOne({ where: { id } });
+      if (!marking) {
+        throw new Error("Marking not found!");
+      }
+      await Marking.destroy({
+        where: {
+          id: id,
+        },
+      });
+      return true;
+    },
   },
+  // resolvers.js
 };
 
 module.exports = resolvers;
