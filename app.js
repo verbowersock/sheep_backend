@@ -25,10 +25,10 @@ async function startServer() {
 
   db.sequelize
     .sync()
-    // .then(() => db.models.Breed.bulkCreate(fakeBreeds))
-    // .then(() => db.models.Color.bulkCreate(fakeColors))
-    // .then(() => db.models.Marking.bulkCreate(fakeMarkings))
-    // .then(() => db.models.Sheep.bulkCreate(fakeSheep))
+    .then(() => db.models.Breed.bulkCreate(fakeBreeds))
+    .then(() => db.models.Color.bulkCreate(fakeColors))
+    .then(() => db.models.Marking.bulkCreate(fakeMarkings))
+    .then(() => db.models.Sheep.bulkCreate(fakeSheep))
     .catch((err) => console.log(err));
 
   app.listen(APP_PORT, () => {
