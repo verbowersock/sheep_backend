@@ -1,11 +1,15 @@
 const db = require("./models/index");
 const { UserInputError } = require("apollo-server");
 const validator = require("validator");
+const { GraphQLUpload } = require("graphql-upload");
+const { createUploadStream } = require("./stream.js");
+const { v4: uuid } = require("uuid");
 
 const Sheep = db.models.Sheep;
 const Breed = db.models.Breed;
 const Color = db.models.Color;
 const Marking = db.models.Marking;
+
 const resolvers = {
   Query: {
     get_all_sheep: async () => {
@@ -141,6 +145,7 @@ const resolvers = {
     createSheep: async (
       _,
       {
+        picture,
         tag_id,
         dob,
         sex,
@@ -174,6 +179,7 @@ const resolvers = {
         );
       }
       await Sheep.create({
+        picture,
         tag_id,
         dob,
         sex,
@@ -189,6 +195,7 @@ const resolvers = {
         date_deceased,
         date_last_bred,
       });
+
       return await Sheep.findOne({
         where: { tag_id },
 
@@ -227,15 +234,16 @@ const resolvers = {
       _,
       {
         sheep_id,
+        picture,
         tag_id,
         dob,
         sex,
         purchase_date,
-        breed,
-        mother,
-        father,
-        color,
-        marking,
+        breed_id,
+        dam,
+        sire,
+        color_id,
+        marking_id,
         scrapie_id,
         name,
         weight_at_birth,
@@ -262,15 +270,16 @@ const resolvers = {
       }
       await Sheep.update(
         {
+          picture,
           tag_id,
           dob,
           sex,
           purchase_date,
-          breed,
-          mother,
-          father,
-          color,
-          marking,
+          breed_id,
+          dam,
+          sire,
+          color_id,
+          marking_id,
           scrapie_id,
           name,
           weight_at_birth,

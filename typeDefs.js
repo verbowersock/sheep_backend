@@ -6,7 +6,7 @@ const typeDefs = gql`
     picture: String
     tag_id: String!
     scrapie_id: String
-    name: String!
+    name: String
     weight_at_birth: Int
     date_deceased: String
     dob: String
@@ -48,8 +48,9 @@ const typeDefs = gql`
   }
   type Mutation {
     createSheep(
+      picture: String
       tag_id: String!
-      dob: String!
+      dob: String
       sex: String!
       purchase_date: String
       breed_id: Int!
@@ -58,7 +59,7 @@ const typeDefs = gql`
       color_id: Int
       marking_id: Int
       scrapie_id: String
-      name: String!
+      name: String
       weight_at_birth: Int
       date_deceased: String
     ): Sheep!
@@ -79,6 +80,7 @@ const typeDefs = gql`
       weight_at_birth: Int
       date_deceased: String
       date_last_bred: String
+      picture: String
     ): Sheep!
 
     deleteSheep(sheep_id: Int!): String

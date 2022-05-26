@@ -8,7 +8,7 @@ module.exports = (Conn, Sequelize) => {
         autoIncrement: true,
       },
       picture: {
-        type: Sequelize.STRING.BINARY,
+        type: Sequelize.STRING,
       },
       tag_id: {
         type: Sequelize.STRING,
@@ -25,7 +25,6 @@ module.exports = (Conn, Sequelize) => {
       },
       dob: {
         type: Sequelize.DATEONLY,
-        allowNull: false,
         validate: {
           isDate: true,
         },
