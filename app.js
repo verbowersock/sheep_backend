@@ -24,7 +24,7 @@ async function startServer() {
   const db = require("./models");
 
   db.sequelize
-    .sync()
+    .sync({ force: true })
     .then(() => db.models.Breed.bulkCreate(fakeBreeds))
     .then(() => db.models.Color.bulkCreate(fakeColors))
     .then(() => db.models.Marking.bulkCreate(fakeMarkings))
