@@ -1,10 +1,35 @@
 const dbConfig = require("../config/db.config.js");
 const Sequelize = require("sequelize");
-const Conn = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
-  host: dbConfig.HOST,
-  dialect: dbConfig.dialect,
-  operatorsAliases: false,
-});
+let Conn;
+if (env === "production") {
+  const { DATABASE_URL } = process.env;
+  const dbUrl = url.parse(DATABASE_URL);
+  const username = dbUrl.auth.substr(0, dbUrl.auth.indexOf(":"));
+  const password = dbUrl.auth.substr(
+    dbUrl.auth.indexOf(":") + 1,
+    dbUrl.auth.length
+  );
+  const dbName = dbUrl.path.slice(1);
+  const host = dbUrl.hostname;
+  const { port } = dbUrl;
+  config.host = host;
+  config.port = port;
+  Conn = new Sequelize(dbName, username, password, config);
+}
+
+// If env is not production, retrieve DB auth details from the config
+else {
+  Conn = new Sequelize(
+ dbConfig.DB,
+  dbConfig.USER,
+  dbConfig.PASSWORD,
+  {
+    host: dbConfig.HOST,
+    dialect: dbConfig.dialect,
+    operatorsAliases: false,
+  }
+);
+
 const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = Conn;
