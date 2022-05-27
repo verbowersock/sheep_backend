@@ -31,7 +31,7 @@ async function startServer() {
     .then(() => db.models.Sheep.bulkCreate(fakeSheep))
     .catch((err) => console.log(err));
 
-  app.listen(APP_PORT, () => {
+  app.listen({ port: process.env.PORT || APP_PORT }, () => {
     console.log(`App listening on port ${APP_PORT}`);
   });
 }
