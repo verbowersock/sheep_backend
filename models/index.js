@@ -1,14 +1,13 @@
 const dbConfig = require("../config/db.config.js");
 const Sequelize = require("sequelize");
 const url = require("url");
-const { postgresMd5PasswordHash } = require("pg/lib/utils");
 const env = process.env.NODE_ENV || "development";
 const config = dbConfig[env];
 
 let Conn;
 
 if (env === "production") {
-  const { DATABASE_URL } = process.env;
+  /*  const { DATABASE_URL } = process.env;
   const dbUrl = url.parse(DATABASE_URL);
   const username = dbUrl.auth.substr(0, dbUrl.auth.indexOf(":"));
   const password = dbUrl.auth.substr(
@@ -20,8 +19,8 @@ if (env === "production") {
   const { port } = dbUrl;
   console.log(config);
   config.host = host;
-  config.port = port;
-  Conn = new Sequelize(dbName, username, password, {
+ config.port = port;*/
+  Conn = new Sequelize(process.env[config.use_env_variable], {
     dialect: "postgres",
     dialectOptions: {
       ssl: {
