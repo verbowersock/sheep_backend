@@ -1,5 +1,6 @@
 const dbConfig = require("../config/db.config.js");
 const Sequelize = require("sequelize");
+import url from "url";
 const env = process.env.NODE_ENV || "development";
 const config = dbConfig[env];
 
