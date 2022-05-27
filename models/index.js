@@ -22,7 +22,7 @@ if (env === "production") {
   config.host = host;
   config.port = port;
   Conn = new Sequelize(dbName, username, password, {
-    dialect: postgres,
+    dialect: "postgres",
     dialectOptions: {
       ssl: {
         require: true,
