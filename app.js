@@ -7,6 +7,7 @@ const { ApolloServer } = require("apollo-server-express");
 const typeDefs = require("./typeDefs");
 const resolvers = require("./resolvers");
 const { graphqlUploadExpress } = require("graphql-upload");
+var cors = require("cors");
 
 //config
 
@@ -21,6 +22,7 @@ async function startServer() {
   await apolloServer.start();
   apolloServer.applyMiddleware({ app });
   app.use(graphqlUploadExpress());
+  app.use(cors());
   const db = require("./models");
 
   db.sequelize
