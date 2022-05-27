@@ -1,6 +1,10 @@
 const dbConfig = require("../config/db.config.js");
 const Sequelize = require("sequelize");
+const env = process.env.NODE_ENV || "development";
+const config = dbConfig[env];
+
 let Conn;
+
 if (env === "production") {
   const { DATABASE_URL } = process.env;
   const dbUrl = url.parse(DATABASE_URL);
@@ -12,18 +16,16 @@ if (env === "production") {
   const dbName = dbUrl.path.slice(1);
   const host = dbUrl.hostname;
   const { port } = dbUrl;
+  console.log(config);
   config.host = host;
   config.port = port;
-  Conn = new Sequelize(dbName, username, password, config);
+  const dialect = dbConfig[env].dialect;
+  Conn = new Sequelize(dbName, username, password, host, port, dialect);
 }
 
 // If env is not production, retrieve DB auth details from the config
 else {
-  Conn = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
-    host: dbConfig.HOST,
-    dialect: dbConfig.dialect,
-    operatorsAliases: false,
-  });
+  Conn = new Sequelize(config.DB, config.USER, config.PASSWORD, config);
 }
 const db = {};
 db.Sequelize = Sequelize;
