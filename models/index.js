@@ -19,17 +19,12 @@ if (env === "production") {
 
 // If env is not production, retrieve DB auth details from the config
 else {
-  Conn = new Sequelize(
- dbConfig.DB,
-  dbConfig.USER,
-  dbConfig.PASSWORD,
-  {
+  Conn = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     host: dbConfig.HOST,
     dialect: dbConfig.dialect,
     operatorsAliases: false,
-  }
-);
-
+  });
+}
 const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = Conn;
