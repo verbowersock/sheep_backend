@@ -1,6 +1,7 @@
 const dbConfig = require("../config/db.config.js");
 const Sequelize = require("sequelize");
 const url = require("url");
+const { postgresMd5PasswordHash } = require("pg/lib/utils");
 const env = process.env.NODE_ENV || "development";
 const config = dbConfig[env];
 
@@ -21,6 +22,7 @@ if (env === "production") {
   config.host = host;
   config.port = port;
   Conn = new Sequelize(dbName, username, password, {
+    dialect: postgres,
     dialectOptions: {
       ssl: {
         require: true,
