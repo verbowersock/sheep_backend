@@ -20,8 +20,7 @@ if (env === "production") {
   console.log(config);
   config.host = host;
   config.port = port;
-  const dialect = dbConfig[env].dialect;
-  Conn = new Sequelize(dbName, username, password, host, port, dialect);
+  Conn = new Sequelize(dbName, username, password, config.dialect, config);
 }
 
 // If env is not production, retrieve DB auth details from the config
