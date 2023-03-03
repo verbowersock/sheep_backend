@@ -14,8 +14,6 @@ module.exports = [
     marking_id: 1,
   },
 
-INSERT INTO sheep (rowid, sheep_id, picture, tag_id, scrapie_id, name, dob, sex, sire, dam, purchase_date, weight_at_birth, date_deceased, breed_id, color_id, marking_id, date_last_bred) 
-            VALUES (null, '1', '', '1234abc', '4322342', 'Betsy', 2020-10-02, 'f', '', '', 2020-01-01, 4, null, '1', '2', '3', null);
   {
     sheep_id: 2,
     tag_id: "567def",
